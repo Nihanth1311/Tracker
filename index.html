@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bujjamma Tracker</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('./HD\ flower\ aesthetic\ wallpaper\ __3!!.jpg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            color: #171013;
+        }
+        h1 {
+            text-align: center;
+            color: #142119;
+            background-color: rgb(255, 255, 255);
+            padding: 20px;
+            margin: 0;
+            font-size: 3em;
+            font-family: 'Georgia', serif;
+        }
+        h2 {
+            color: #FAFFC5;
+            background-color: #5E686D;
+            padding: 15px;
+            border-radius: 15px;
+            display: block;
+            text-align: center;
+            font-size: 1.8em;
+            font-family: 'Georgia', serif;
+        }
+        .subject {
+            margin: 50px auto;
+            padding: 20px;
+            border: 4px solid #ff69b4;
+            border-radius: 60px;
+            background-color:#FFFBCA;
+            max-width: 900px;
+            transition: all 0.3s ease-in-out;
+        }
+        .subject:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .lesson {
+            margin-left: 30px;
+            font-size: 1.5em;
+        }
+        .completed {
+            color: #ff69b4;
+            font-weight: bold;
+            font-size: 1.2em;
+            display: block; /* Display quote on a new line */
+            margin-top: 10px; /* Add spacing */
+        }
+        input[type="checkbox"] {
+            accent-color: #ff69b4;
+        }
+        input[type="checkbox"]:disabled {
+            opacity: 0.5;
+        }
+        .clear-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            font-size: 1.5em;
+            border: 2px solid #e055a1;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+            width: 200px;
+        }
+    </style>
+<script>
+    let checkboxes = document.querySelectorAll("input[type='checkbox']");
+    let cooldownTime = 60 * 60 * 1000; // 1 hour in milliseconds
+    const quotes = [
+"Love is not about how many days, months, or years you have been together. Love is about how much you love each other every single day.",
+"To love is nothing. To be loved is something. But to love and be loved, that’s everything.",
+"Love is composed of a single soul inhabiting two bodies.",
+"Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.",
+"There is only one happiness in life – to love and to be loved.",
+"You are the source of my joy, the center of my world, and the whole of my heart.",
+"Love doesn’t make the world go ’round. Love is what makes the ride worthwhile.",
+"You know you’re in love when you can’t fall asleep because reality is finally better than your dreams.",
+"The best thing to hold onto in life is each other.",
+"Every love story is beautiful, but ours is my favorite.",
+"I saw that you were perfect, and so I loved you. Then I saw that you were not perfect, and I loved you even more.",
+"You have bewitched me, body and soul, and I love, I love, I love you.",
+"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.",
+"You are my today and all of my tomorrows.",
+"You are the finest, loveliest, tenderest, and most beautiful person I have ever known—and even that is an understatement.",
+"If I know what love is, it is because of you.",
+"I love you not only for what you are but for what I am when I am with you.",
+"Naa love vee nuvu",
+"Thinking of you keeps me awake. Dreaming of you keeps me asleep. Being with you keeps me alive.",
+"The best love is the kind that awakens the soul; that makes us reach for more, that plants the fire in our hearts and brings peace to our minds. That’s what I hope to give you forever.",
+"I love you more than words can express, and I’m grateful every single day for you.",
+"My heart needs you Bujjamma",
+"Nee Babu ki cheppi ninnu pattukellipota",
+"Nannu eppudu vadalaku pleaseeeee",
+"With you, everything feels right.",
+"Every moment with you is a treasure.",
+"You are the missing piece in my life.",
+"Bujji, study hard , I want your mini versions",
+"You are my anchor, my home, my everything.",
+"I fall for you a little more every day.",
+"You are the reason my world spins.",
+"nee arms lo padipotaa",
+"my bujjamma kosam nen emina chesta",
+"Death lo kuda all i wanna see is you smiling Bujjamma, I love You",
+"you are my dream bujjamma.",
+"Your love makes every challenge worth it.",
+"I need to cuddle with this Kadali",
+"Thank you for being my constant in this ever-changing world.",
+"You are my dream come true.",
+"I love you to the moon and back.",
+"I love youuuuuuuuuuuuuuuuu",
+"With you, every day is a new adventure.",
+"You complete me in every way possible.",
+"Your love is the greatest gift of my life.",
+"I never knew love until I met you Bujjamma.",
+"Pichi, nuv naa pichivee",
+"You are my safe haven and my greatest adventure.",
+"Loving you is the easiest thing I've ever done.",
+"My heart belongs to you, now and forever.",
+"You make me feel like the luckiest person alive.",
+"With you, my soul feels whole.",
+"Kittuu proud ga undali gaaaaa, chaduvuu , lessgooooo",
+"Inko lession complete cheyyave gajjamma",
+"Yemaya chesave chuddamm",
+"How does it feel, now that you have conquered my heart bujjamma",
+"I love how you make the simplest moments magical.",
+"I want you to myself, I alone should have youu",
+"Maybe I'm blessed, To find such a Beautiful girl who truly loves me. I'll take very good care of you Tanuuuuuu",
+"You are the calm to my chaos.",
+"You need to give your best bujjamma",
+"With you, my heart is at peace.",
+"Your love is the rhythm of my life.",
+"Forever with you doesn't seem long enough.",
+"You make every day better just by being in it.",
+"Nuvve naa Bangaram Bujjiii",
+"Website create cheadam late ayyindi, sorry, nee husband nee gaaa forgive cheseyyyyyy",
+"Thank you for being my everything.",
+"bujjammaaaaaaa, I love youuuu",
+"You are My Home Tanu",
+"You make me feel like the most special person in the world.",
+"You are my heart, my soul, my everything.",
+"It's either you or You",
+"Let's make this love an adventure bujjamma",
+"You are my only Love",
+"Naaku kavalsindi nuvve Tanu, All is I ever wanted is your love",
+"You make the world a better place just by being in it.",
+"With you, every day feels like a holiday.",
+"You are the most beautiful part of my life.",
+"I love you, not only for what you are but for what I am when I am with you.",
+"Your love is the greatest gift I have ever received.",
+"You are my everything, today and always. Ardam cheskove kadalii",
+"You are my happily ever after.",
+"You are my forever love, and I cherish every moment with you.",
+"Honest ga cheptunna, you are my best decision",
+"With you, every day feels like a dream come true.",
+"Nenu ninnu premistunnanuuuuuu",
+"There is no breaking up for us bujji"
+];
+    function saveCheckboxStates() {
+        const states = {};
+        checkboxes.forEach((checkbox) => {
+            states[checkbox.id] = checkbox.checked;
+        });
+        localStorage.setItem("checkboxStates", JSON.stringify(states));
+    }
+
+    function loadCheckboxStates() {
+        const states = JSON.parse(localStorage.getItem("checkboxStates")) || {};
+        checkboxes.forEach((checkbox) => {
+            if (states[checkbox.id]) {
+                checkbox.checked = true;
+                const rewardId = `reward${checkbox.id.replace(/\D/g, '')}`;
+                const rewardText = document.getElementById(rewardId);
+                if (rewardText) {
+                    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                    rewardText.textContent = randomQuote;
+                }
+            }
+        });
+    }
+
+    function handleCompletion(lessonId, rewardId) {
+        const checkbox = document.getElementById(lessonId);
+        const rewardText = document.getElementById(rewardId);
+
+        if (checkbox.checked) {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            rewardText.textContent = randomQuote;
+            saveCheckboxStates();
+            initiateCooldown();
+        } else {
+            rewardText.textContent = "";
+            saveCheckboxStates();
+        }
+    }
+
+    function initiateCooldown() {
+        checkboxes.forEach((checkbox) => {
+            checkbox.disabled = true;
+        });
+
+        setTimeout(() => {
+            checkboxes.forEach((checkbox) => {
+                checkbox.disabled = false;
+            });
+        }, cooldownTime);
+    }
+    function clearAll() {
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+        localStorage.removeItem("checkboxStates");
+        const rewardTexts = document.querySelectorAll(".completed");
+        rewardTexts.forEach((rewardText) => {
+            rewardText.textContent = "";
+        });
+    }
+
+    window.onload = function () {
+        checkboxes = document.querySelectorAll("input[type='checkbox']");
+        loadCheckboxStates();
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener("change", saveCheckboxStates);
+        });
+    };
+</script>
+
+</head>
+<body>
+    <h1>Bujjamma's tracker</h1>
+
+    <div class="subject">
+        <h2>Biology</h2>
+        <div class="lesson">
+            <input type="checkbox" id="bio1" onclick="handleCompletion('bio1', 'reward1')">
+            <label for="bio1">Living World</label>
+            <span id="reward1" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio2" onclick="handleCompletion('bio2', 'reward2')">
+            <label for="bio2">Biological Classification</label>
+            <span id="reward2" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio3" onclick="handleCompletion('bio3', 'reward3')">
+            <label for="bio3">Plant Kingdom</label>
+            <span id="reward3" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio4" onclick="handleCompletion('bio4', 'reward4')">
+            <label for="bio4">Animal Kingdom</label>
+            <span id="reward4" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio5" onclick="handleCompletion('bio5', 'reward5')">
+            <label for="bio5">Morphology of Plants</label>
+            <span id="reward5" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio6" onclick="handleCompletion('bio6', 'reward6')">
+            <label for="bio6">Anatomy of Flowering Plants</label>
+            <span id="reward6" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio7" onclick="handleCompletion('bio7', 'reward7')">
+            <label for="bio7">Structural Organisation</label>
+            <span id="reward7" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio8" onclick="handleCompletion('bio8', 'reward8')">
+            <label for="bio8">Cell Unit of Life</label>
+            <span id="reward8" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio9" onclick="handleCompletion('bio9', 'reward9')">
+            <label for="bio9">Biomolecules</label>
+            <span id="reward9" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio10" onclick="handleCompletion('bio10', 'reward10')">
+            <label for="bio10">Cell Cycle</label>
+            <span id="reward10" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio11" onclick="handleCompletion('bio11', 'reward11')">
+            <label for="bio11">Photosynthesis</label>
+            <span id="reward11" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio12" onclick="handleCompletion('bio12', 'reward12')">
+            <label for="bio12">Respiration</label>
+            <span id="reward12" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio13" onclick="handleCompletion('bio13', 'reward13')">
+            <label for="bio13">Plant Growth and Development</label>
+            <span id="reward13" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio14" onclick="handleCompletion('bio14', 'reward14')">
+            <label for="bio14">Breathing</label>
+            <span id="reward14" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio15" onclick="handleCompletion('bio15', 'reward15')">
+            <label for="bio15">Body Fluids</label>
+            <span id="reward15" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio16" onclick="handleCompletion('bio16', 'reward16')">
+            <label for="bio16">Excretion</label>
+            <span id="reward16" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio17" onclick="handleCompletion('bio17', 'reward17')">
+            <label for="bio17">Locomotion</label>
+            <span id="reward17" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio18" onclick="handleCompletion('bio18', 'reward18')">
+            <label for="bio18">Neural Control</label>
+            <span id="reward18" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio19" onclick="handleCompletion('bio19', 'reward19')">
+            <label for="bio19">Chemical Coordination</label>
+            <span id="reward19" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio20" onclick="handleCompletion('bio20', 'reward20')">
+            <label for="bio20">Sexual Reproduction in Flowering Plants</label>
+            <span id="reward20" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio21" onclick="handleCompletion('bio21', 'reward21')">
+            <label for="bio21">Human Reproduction</label>
+            <span id="reward21" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio22" onclick="handleCompletion('bio22', 'reward22')">
+            <label for="bio22">Reproductive Health</label>
+            <span id="reward22" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio23" onclick="handleCompletion('bio23', 'reward23')">
+            <label for="bio23">Principles of Inheritance</label>
+            <span id="reward23" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio24" onclick="handleCompletion('bio24', 'reward24')">
+            <label for="bio24">Molecular Basis</label>
+            <span id="reward24" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio25" onclick="handleCompletion('bio25', 'reward25')">
+            <label for="bio25">Evolution</label>
+            <span id="reward25" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio26" onclick="handleCompletion('bio26', 'reward26')">
+            <label for="bio26">Human Health and Diseases</label>
+            <span id="reward26" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio27" onclick="handleCompletion('bio27', 'reward27')">
+            <label for="bio27">Microbes in Human Welfare</label>
+            <span id="reward27" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio28" onclick="handleCompletion('bio28', 'reward28')">
+            <label for="bio28">Biotechnology Principles</label>
+            <span id="reward28" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio29" onclick="handleCompletion('bio29', 'reward29')">
+            <label for="bio29">Biotechnology Applications</label>
+            <span id="reward29" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio30" onclick="handleCompletion('bio30', 'reward30')">
+            <label for="bio30">Organisms and Populations</label>
+            <span id="reward30" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio31" onclick="handleCompletion('bio31', 'reward31')">
+            <label for="bio31">Ecosystem</label>
+            <span id="reward31" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="bio32" onclick="handleCompletion('bio32', 'reward32')">
+            <label for="bio32">Biodiversity</label>
+            <span id="reward32" class="completed"></span>
+        </div>
+    </div>
+
+    <div class="subject">
+        <h2>Chemistry</h2>
+        <div class="lesson">
+            <input type="checkbox" id="chem1" onclick="handleCompletion('chem1', 'reward33')">
+            <label for="chem1">Some Basic Concepts</label>
+            <span id="reward33" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem2" onclick="handleCompletion('chem2', 'reward34')">
+            <label for="chem2">Structure of Atom</label>
+            <span id="reward34" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem3" onclick="handleCompletion('chem3', 'reward35')">
+            <label for="chem3">Classification of Elements</label>
+            <span id="reward35" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem4" onclick="handleCompletion('chem4', 'reward36')">
+            <label for="chem4">Chemical Bonding</label>
+            <span id="reward36" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem5" onclick="handleCompletion('chem5', 'reward37')">
+            <label for="chem5">Thermodynamics</label>
+            <span id="reward37" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem6" onclick="handleCompletion('chem6', 'reward38')">
+            <label for="chem6">Equilibrium</label>
+            <span id="reward38" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem7" onclick="handleCompletion('chem7', 'reward39')">
+            <label for="chem7">Redox Reactions</label>
+            <span id="reward39" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem8" onclick="handleCompletion('chem8', 'reward40')">
+            <label for="chem8">P Block 13-14</label>
+            <span id="reward40" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem9" onclick="handleCompletion('chem9', 'reward41')">
+            <label for="chem9">Organic Chemistry</label>
+            <span id="reward41" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem10" onclick="handleCompletion('chem10', 'reward42')">
+            <label for="chem10">Hydrocarbons</label>
+            <span id="reward42" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem11" onclick="handleCompletion('chem11', 'reward43')">
+            <label for="chem11">Solutions</label>
+            <span id="reward43" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem12" onclick="handleCompletion('chem12', 'reward44')">
+            <label for="chem12">Electrochemistry</label>
+            <span id="reward44" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem13" onclick="handleCompletion('chem13', 'reward45')">
+            <label for="chem13">Chemical Kinetics</label>
+            <span id="reward45" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem14" onclick="handleCompletion('chem14', 'reward46')">
+            <label for="chem14">P Block 15-18</label>
+            <span id="reward46" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem15" onclick="handleCompletion('chem15', 'reward47')">
+            <label for="chem15">D and F Blocks</label>
+            <span id="reward47" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem16" onclick="handleCompletion('chem16', 'reward48')">
+            <label for="chem16">Coordination Compounds</label>
+            <span id="reward48" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem17" onclick="handleCompletion('chem17', 'reward49')">
+            <label for="chem17">Haloalkanes and Haloarenes</label>
+            <span id="reward49" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem18" onclick="handleCompletion('chem18', 'reward50')">
+            <label for="chem18">Alcohols, Phenols, and Ethers</label>
+            <span id="reward50" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem19" onclick="handleCompletion('chem19', 'reward51')">
+            <label for="chem19">Aldehydes, Ketones, and Carboxylic Acids</label>
+            <span id="reward51" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem20" onclick="handleCompletion('chem20', 'reward52')">
+            <label for="chem20">Amines</label>
+            <span id="reward52" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="chem21" onclick="handleCompletion('chem21', 'reward53')">
+            <label for="chem21">Biomolecules</label>
+            <span id="reward53" class="completed"></span>
+        </div>
+    </div>
+
+    <div class="subject">
+        <h2>Physics</h2>
+        <div class="lesson">
+            <input type="checkbox" id="phy1" onclick="handleCompletion('phy1', 'reward54')">
+            <label for="phy1">Units and Measurements</label>
+            <span id="reward54" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy2" onclick="handleCompletion('phy2', 'reward55')">
+            <label for="phy2">Motion 1D</label>
+            <span id="reward55" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy3" onclick="handleCompletion('phy3', 'reward56')">
+            <label for="phy3">Motion 2D</label>
+            <span id="reward56" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy4" onclick="handleCompletion('phy4', 'reward57')">
+            <label for="phy4">Laws of Motion</label>
+            <span id="reward57" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy5" onclick="handleCompletion('phy5', 'reward58')">
+            <label for="phy5">Work, Power, Energy</label>
+            <span id="reward58" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy6" onclick="handleCompletion('phy6', 'reward59')">
+            <label for="phy6">System of Particles</label>
+            <span id="reward59" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy7" onclick="handleCompletion('phy7', 'reward60')">
+            <label for="phy7">Gravitation</label>
+            <span id="reward60" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy8" onclick="handleCompletion('phy8', 'reward61')">
+            <label for="phy8">Mechanical Solids</label>
+            <span id="reward61" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy9" onclick="handleCompletion('phy9', 'reward62')">
+            <label for="phy9">Mechanical Fluids</label>
+            <span id="reward62" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy10" onclick="handleCompletion('phy10', 'reward63')">
+            <label for="phy10">Thermal Properties</label>
+            <span id="reward63" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy11" onclick="handleCompletion('phy11', 'reward64')">
+            <label for="phy11">Thermodynamics</label>
+            <span id="reward64" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy12" onclick="handleCompletion('phy12', 'reward65')">
+            <label for="phy12">Kinetic Theory</label>
+            <span id="reward65" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy13" onclick="handleCompletion('phy13', 'reward66')">
+            <label for="phy13">Oscillations</label>
+            <span id="reward66" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy14" onclick="handleCompletion('phy14', 'reward67')">
+            <label for="phy14">Waves</label>
+            <span id="reward67" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy15" onclick="handleCompletion('phy15', 'reward68')">
+            <label for="phy15">Electric Charges</label>
+            <span id="reward68" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy16" onclick="handleCompletion('phy16', 'reward69')">
+            <label for="phy16">Electrostatic Potential</label>
+            <span id="reward69" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy17" onclick="handleCompletion('phy17', 'reward70')">
+            <label for="phy17">Current Electricity</label>
+            <span id="reward70" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy18" onclick="handleCompletion('phy18', 'reward71')">
+            <label for="phy18">Moving Charges</label>
+            <span id="reward71" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy19" onclick="handleCompletion('phy19', 'reward72')">
+            <label for="phy19">Magnetism and Matter</label>
+            <span id="reward72" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy20" onclick="handleCompletion('phy20', 'reward73')">
+            <label for="phy20">EMI</label>
+            <span id="reward73" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy21" onclick="handleCompletion('phy21', 'reward74')">
+            <label for="phy21">AC</label>
+            <span id="reward74" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy22" onclick="handleCompletion('phy22', 'reward75')">
+            <label for="phy22">EMW</label>
+            <span id="reward75" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy23" onclick="handleCompletion('phy23', 'reward76')">
+            <label for="phy23">Ray Optics</label>
+            <span id="reward76" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy24" onclick="handleCompletion('phy24', 'reward77')">
+            <label for="phy24">Wave Optics</label>
+            <span id="reward77" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy25" onclick="handleCompletion('phy25', 'reward78')">
+            <label for="phy25">Dual Nature</label>
+            <span id="reward78" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy26" onclick="handleCompletion('phy26', 'reward79')">
+            <label for="phy26">Atoms</label>
+            <span id="reward79" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy27" onclick="handleCompletion('phy27', 'reward80')">
+            <label for="phy27">Nuclei</label>
+            <span id="reward80" class="completed"></span>
+        </div>
+        <div class="lesson">
+            <input type="checkbox" id="phy28" onclick="handleCompletion('phy28', 'reward81')">
+            <label for="phy28">Semiconductors</label>
+            <span id="reward81" class="completed"></span>
+        </div>
+    </div>
+    <button class="clear-button" onclick="clearAll()">Clear All</button>
+</body>
+</html>
