@@ -170,43 +170,57 @@
 "Nenu ninnu premistunnanuuuuuu",
 "There is no breaking up for us bujji"
 ];
-    function saveCheckboxStates() {
-        const states = {};
-        checkboxes.forEach((checkbox) => {
-            states[checkbox.id] = checkbox.checked;
-        });
-        localStorage.setItem("checkboxStates", JSON.stringify(states));
-    }
-
-    function loadCheckboxStates() {
-        const states = JSON.parse(localStorage.getItem("checkboxStates")) || {};
-        checkboxes.forEach((checkbox) => {
-            if (states[checkbox.id]) {
-                checkbox.checked = true;
-                const rewardId = `reward${checkbox.id.replace(/\D/g, '')}`;
-                const rewardText = document.getElementById(rewardId);
-                if (rewardText) {
-                    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-                    rewardText.textContent = randomQuote;
-                }
-            }
-        });
-    }
-
-    function handleCompletion(lessonId, rewardId) {
-        const checkbox = document.getElementById(lessonId);
+function saveCheckboxStates() {
+    const states = {};
+    const displayedQuotes = {};
+    checkboxes.forEach((checkbox) => {
+        states[checkbox.id] = checkbox.checked;
+        const rewardId = `reward${checkbox.id.replace(/\D/g, '')}`;
         const rewardText = document.getElementById(rewardId);
-
-        if (checkbox.checked) {
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            rewardText.textContent = randomQuote;
-            saveCheckboxStates();
-            initiateCooldown();
-        } else {
-            rewardText.textContent = "";
-            saveCheckboxStates();
+        if (rewardText && rewardText.textContent) {
+            displayedQuotes[rewardId] = rewardText.textContent;
         }
+    });
+    localStorage.setItem("checkboxStates", JSON.stringify(states));
+    localStorage.setItem("displayedQuotes", JSON.stringify(displayedQuotes));
+}
+
+
+function loadCheckboxStates() {
+    const states = JSON.parse(localStorage.getItem("checkboxStates")) || {};
+    const displayedQuotes = JSON.parse(localStorage.getItem("displayedQuotes")) || {};
+    checkboxes.forEach((checkbox) => {
+        if (states[checkbox.id]) {
+            checkbox.checked = true;
+            const rewardId = `reward${checkbox.id.replace(/\D/g, '')}`;
+            const rewardText = document.getElementById(rewardId);
+            if (rewardText && displayedQuotes[rewardId]) {
+                rewardText.textContent = displayedQuotes[rewardId];
+            }
+        }
+    });
+}
+
+
+function handleCompletion(lessonId, rewardId) {
+    const checkbox = document.getElementById(lessonId);
+    const rewardText = document.getElementById(rewardId);
+
+    if (checkbox.checked) {
+        let randomQuote;
+        if (rewardText.textContent) {
+            randomQuote = rewardText.textContent; // Retain the same quote if it exists
+        } else {
+            randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            rewardText.textContent = randomQuote;
+        }
+        saveCheckboxStates();
+        initiateCooldown();
+    } else {
+        rewardText.textContent = "";
+        saveCheckboxStates();
     }
+}
 
     function initiateCooldown() {
         checkboxes.forEach((checkbox) => {
